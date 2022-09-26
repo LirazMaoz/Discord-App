@@ -1,5 +1,6 @@
 {
   "name": "backend",
+  "proxy": "http://localhost:5002",
   "version": "1.0.0",
   "description": "",
   "main": "server.js",

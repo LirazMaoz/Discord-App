@@ -7,6 +7,7 @@ require('dotenv').config()
 const socketServer = require('./socketServer')
 
 const authRoutes = require('./routes/authRoutes')
+const friendInvitationRoutes = require('./routes/friendInvitationRoutes')
 
 const PORT = process.env.PORT || process.env.API_PORT
 
@@ -16,8 +17,8 @@ app.use(cors())
 
 //Register the routes
 app.use('/api/auth', authRoutes)
+app.use('/api/friend-invitation', friendInvitationRoutes)
 
-console.log('Server Is Restarting')
 const server = http.createServer(app)
 socketServer.registerSocketServer(server)
 
