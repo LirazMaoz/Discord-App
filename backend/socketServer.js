@@ -5,6 +5,11 @@ const serverStore = require('./serverStore')
 const { emit } = require('./models/user')
 const directMessageHandler = require('./socketHandlers/directMessageHandler')
 const directChetHistoryHandler = require('./socketHandlers/directChetHistoryHandler')
+const roomCreateHandler = require('./socketHandlers/roomCreateHandler')
+const roomJoineHandler = require('./socketHandlers/roomJoinHandler')
+const roomLeaveHandler = require('./socketHandlers/roomLeaveHandler')
+const roomInitializeConnectionHandler = require('./socketHandlers/roomInitializeConnectionHandler')
+const roomSignalingDataHandler = require('./socketHandlers/roomSignalingDataHandler')
 
 const registerSocketServer = (server) => {
   const io = require('socket.io')(server, {
@@ -29,7 +34,6 @@ const registerSocketServer = (server) => {
     console.log(socket.id)
 
     newConnectionHndler(socket, io)
-
     emitOnlineUsers()
 
     socket.on('direct-message', (data) => {
@@ -40,7 +44,23 @@ const registerSocketServer = (server) => {
       directChetHistoryHandler(socket, data)
     })
 
-    socket.on('diconnect', () => {
+    socket.on('room-create', () => {
+      roomCreateHandler(socket)
+    })
+    socket.on('room-join', (data) => {
+      roomJoineHandler(socket, data)
+    })
+    socket.on('room-leave', (data) => {
+      roomLeaveHandler(socket, data)
+    })
+    socket.on('conn-init', (data) => {
+      roomInitializeConnectionHandler(socket, data)
+    })
+
+    socket.on('conn-signal', (data) => {
+      roomSignalingDataHandler(socket, data)
+    })
+    socket.on('disconnect', () => {
       disconnectHandler(socket)
     })
   })
